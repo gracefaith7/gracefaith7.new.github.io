@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Conversion Machine | Convert-O-Matic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 3px solid rgba(255,255,255,0.2);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: #FFD166;
+            background: #1a2a6c;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .logo-text span {
+            color: #FFD166;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin: 40px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .page-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #FFD166, #FF6B6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #FF6B6B, 0 0 20px #FF6B6B; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #FF6B6B, 0 0 40px #FF6B6B; }
+        }
+        
+        .page-header p {
+            font-size: 1.4rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #FFD166;
+        }
+        
+        .converter-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .converter-card:before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23FF6B6B" stroke-width="2" stroke-dasharray="5,5"/></svg>');
+            opacity: 0.1;
+        }
+        
+        .themed-categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .theme-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 180px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .theme-btn:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .theme-btn.active {
+            border-color: #4facfe;
+            transform: scale(1.05);
+        }
+        
+        .theme-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .kitchen { background: #FFEB3B; color: #FF6B6B; }
+        .gym { background: #4CAF50; color: white; }
+        .travel { background: #2196F3; color: white; }
+        .science { background: #9C27B0; color: white; }
+        .time { background: #FF9800; color: white; }
+        .standard { background: #9E9E9E; color: white; }
+        
+        .theme-btn h3 {
+            font-size: 1.2rem;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .converter-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .converter-header h2 {
+            font-size: 2.5rem;
+            color: #1a2a6c;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .converter-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 5px;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            border-radius: 3px;
+        }
+        
+        .conversion-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a2a6c;
+            font-size: 1.1rem;
+        }
+        
+        .input-group input, .input-group select {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            border-color: #4facfe;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+        }
+        
+        .swap-btn {
+            align-self: flex-end;
+            margin-bottom: 8px;
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .swap-btn:hover {
+            background: #0d1a4a;
+            transform: rotate(180deg);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .convert-btn {
+            flex: 3;
+            padding: 20px;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .convert-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.6);
+        }
+        
+        .surprise-btn {
+            flex: 1;
+            padding: 20px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .surprise-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.6);
+        }
+        
+        .result-container {
+            background: #e8f5e9;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid #4CAF50;
+            display: none;
+        }
+        
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a2a6c;
+            margin: 20px 0;
+            animation: popIn 0.5s ease-out;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .conversion-text {
+            font-size: 1.5rem;
+            color: #1a2a6c;
+            margin-bottom: 20px;
+        }
+        
+        .sound-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        
+        .sound-toggle i {
+            font-size: 1.5rem;
+            color: #1a2a6c;
+        }
+        
+        .machine-decoration {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 2rem;
+            animation: spin 10s linear infinite;
+        }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .featured-conversion {
+            background: rgba(26, 42, 108, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            border: 2px dashed #1a2a6c;
+        }
+        
+        .featured-conversion h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+        
+        .featured-conversion p {
+            font-size: 1.2rem;
+            color: #1a2a6c;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .conversion-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .swap-btn {
+                margin: 10px auto;
+                align-self: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .theme-btn {
+                width: 140px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="logo-text">Convert<span>-O-Matic</span></div>
+            </div>
+            <div>
+                <a href="#" style="color: white; text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </header>
+        
+        <div class="page-header">
+            <h1>The Ultimate Conversion Machine – Try It Now!</h1>
+            <p>Transform boring measurements into fun conversions with sound effects, themed categories, and surprises!</p>
+        </div>
+        
+        <div class="converter-card">
+            <div class="sound-toggle" id="sound-toggle">
+                <i class="fas fa-volume-up"></i>
+            </div>
+            
+            <div class="themed-categories">
+                <div class="theme-btn active" data-category="standard">
+                    <div class="theme-icon standard">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Standard</h3>
+                    <p>All units</p>
+                </div>
+                <div class="theme-btn" data-category="kitchen">
+                    <div class="theme-icon kitchen">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Kitchen Chaos</h3>
+                    <p>Cooking units</p>
+                </div>
+                <div class="theme-btn" data-category="gym">
+                    <div class="theme-icon gym">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3>Gym Gains</h3>
+                    <p>Weight & Fitness</p>
+                </div>
+                <div class="theme-btn" data-category="travel">
+                    <div class="theme-icon travel">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <h3>Globetrotter</h3>
+                    <p>Travel units</p>
+                </div>
+                <div class="theme-btn" data-category="science">
+                    <div class="theme-icon science">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3>Science Lab</h3>
+                    <p>Precise measurements</p>
+                </div>
+                <div class="theme-btn" data-category="time">
+                    <div class="theme-icon time">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Time Warp</h3>
+                    <p>Time conversions</p>
+                </div>
+            </div>
+            
+            <div class="converter-header">
+                <h2>Universal Unit Converter</h2>
+                <p>Select a theme or use the standard converter for all units</p>
+            </div>
+            
+            <div class="conversion-inputs">
+                <div class="input-group">
+                    <label for="value"><i class="fas fa-hashtag"></i> Value</label>
+                    <input type="number" id="value" placeholder="Enter value" value="1">
+                </div>
+                
+                <button class="swap-btn" id="swap-btn">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+                
+                <div class="input-group">
+                    <label for="from-unit"><i class="fas fa-long-arrow-alt-right"></i> From Unit</label>
+                    <select id="from-unit">
+                        <option value="meter">Meter (m)</option>
+                        <option value="foot">Foot (ft)</option>
+                        <option value="cups">Cups (US)</option>
+                        <option value="pound">Pound (lb)</option>
+                        <option value="fahrenheit">Fahrenheit (°F)</option>
+                    </select>
+                </div>
+                
+                <div></div>
+                <div></div>
+                
+                <div class="input-group">
+                    <label for="to-unit"><i class="fas fa-long-arrow-alt-right"></i> To Unit</label>
+                    <select id="to-unit">
+                        <option value="foot">Foot (ft)</option>
+                        <option value="meter">Meter (m)</option>
+                        <option value="ml">Milliliters (mL)</option>
+                        <option value="kg">Kilogram (kg)</option>
+                        <option value="celsius">Celsius (°C)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="convert-btn" id="convert-btn">
+                    <i class="fas fa-bolt"></i> Convert Now
+                </button>
+                <button class="surprise-btn" id="surprise-btn">
+                    <i class="fas fa-gift"></i> Surprise Me!
+                </button>
+            </div>
+            
+            <div class="result-container" id="result">
+                <div class="conversion-text">
+                    Your Conversion Result:
+                </div>
+                <div class="result-value" id="result-value">
+                    1 Meter = 3.2808 Feet
+                </div>
+                <div class="featured-conversion">
+                    <h3><i class="fas fa-lightbulb"></i> Did You Know?</h3>
+                    <p>The Eiffel Tower is 330 meters tall - that's about 1,083 feet or 60 giraffes stacked!</p>
+                </div>
+            </div>
+            
+            <div class="machine-decoration">
+                <i class="fas fa-cogs"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sound effects using the Web Audio API
+        function playSound(type) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            let oscillator, gainNode;
+            
+            try {
+                oscillator = audioContext.createOscillator();
+                gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Different sounds for different actions
+                if (type === 'convert') {
+                    // Conversion sound (beep)
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                } else if (type === 'surprise') {
+                    // Surprise sound (fun melody)
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                } else if (type === 'swap') {
+                    // Swap sound (whoosh)
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.2);
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                } else if (type === 'theme') {
+                    // Theme change sound (blip)
+                    oscillator.type = 'square';
+                    oscillator.frequency.setValueAtTime(392, audioContext.currentTime); // G4
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                }
+            } catch (e) {
+                console.log("Sound error:", e);
+            }
+        }
+        
+        // Conversion factors
+        const conversionFactors = {
+            // Length
+            meter: { foot: 3.28084, inch: 39.3701 },
+            foot: { meter: 0.3048, inch: 12 },
+            inch: { meter: 0.0254, foot: 0.0833333 },
+            
+            // Volume
+            cups: { ml: 236.588, tbsp: 16, tsp: 48 },
+            ml: { cups: 0.00422675, tbsp: 0.067628, tsp: 0.202884 },
+            tbsp: { cups: 0.0625, ml: 14.7868, tsp: 3 },
+            tsp: { cups: 0.0208333, ml: 4.92892, tbsp: 0.333333 },
+            
+            // Weight
+            pound: { kg: 0.453592, gram: 453.592 },
+            kg: { pound: 2.20462, gram: 1000 },
+            gram: { pound: 0.00220462, kg: 0.001 },
+            
+            // Temperature
+            fahrenheit: { celsius: (f) => (f - 32) * 5/9 },
+            celsius: { fahrenheit: (c) => (c * 9/5) + 32 },
+            
+            // Time
+            second: { minute: 1/60, hour: 1/3600 },
+            minute: { second: 60, hour: 1/60 },
+            hour: { second: 3600, minute: 60 }
+        };
+        
+        // Unit display names
+        const unitNames = {
+            meter: "Meters",
+            foot: "Feet",
+            inch: "Inches",
+            cups: "Cups",
+            ml: "Milliliters",
+            tbsp: "Tablespoons",
+            tsp: "Teaspoons",
+            pound: "Pounds",
+            kg: "Kilograms",
+            gram: "Grams",
+            fahrenheit: "°F",
+            celsius: "°C",
+            second: "Seconds",
+            minute: "Minutes",
+            hour: "Hours"
+        };
+        
+        // Themed categories
+        const categories = {
+            standard: {
+                name: "Standard",
+                units: ["meter", "foot", "inch", "cups", "ml", "pound", "kg", "fahrenheit", "celsius", "second", "minute", "hour"]
+            },
+            kitchen: {
+                name: "Kitchen Chaos",
+                units: ["cups", "ml", "tbsp", "tsp", "gram", "fahrenheit", "celsius"]
+            },
+            gym: {
+                name: "Gym Gains",
+                units: ["pound", "kg", "inch", "foot", "minute", "hour"]
+            },
+            travel: {
+                name: "Globetrotter",
+                units: ["foot", "meter", "hour", "minute", "fahrenheit", "celsius"]
+            },
+            science: {
+                name: "Science Lab",
+                units: ["meter", "gram", "ml", "celsius", "second"]
+            },
+            time: {
+                name: "Time Warp",
+                units: ["second", "minute", "hour"]
+            }
+        };
+        
+        // Fun conversions for "Surprise Me!"
+        const surpriseConversions = [
+            { from: "meter", to: "banana", factor: 6.5, fromName: "Meters", toName: "Bananas", desc: "Average banana length is 15-20cm" },
+            { from: "cups", to: "olympic-pool", factor: 0.0000000025, fromName: "Cups", toName: "Olympic Pools", desc: "Olympic pool = 2,500,000 liters" },
+            { from: "pound", to: "hamburger", factor: 3, fromName: "Pounds", toName: "Hamburgers", desc: "Average hamburger weighs about 0.33 lbs" },
+            { from: "hour", to: "netflix-episode", factor: 2, fromName: "Hours", toName: "Netflix Episodes", desc: "Average TV episode is 30-60 minutes" },
+            { from: "foot", to: "giraffe", factor: 0.055, fromName: "Feet", toName: "Giraffes", desc: "Average giraffe height is 18 feet" },
+            { from: "ml", to: "teardrop", factor: 50, fromName: "Milliliters", toName: "Teardrops", desc: "Average teardrop is 0.02ml" }
+        ];
+        
+        // DOM Elements
+        const valueInput = document.getElementById('value');
+        const fromUnitSelect = document.getElementById('from-unit');
+        const toUnitSelect = document.getElementById('to-unit');
+        const convertBtn = document.getElementById('convert-btn');
+        const swapBtn = document.getElementById('swap-btn');
+        const surpriseBtn = document.getElementById('surprise-btn');
+        const resultDiv = document.getElementById('result');
+        const resultValue = document.getElementById('result-value');
+        const soundToggle = document.getElementById('sound-toggle');
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        
+        let soundEnabled = true;
+        
+        // Initialize the converter
+        function init() {
+            // Event listeners
+            convertBtn.addEventListener('click', convert);
+            swapBtn.addEventListener('click', swapUnits);
+            surpriseBtn.addEventListener('click', surpriseMe);
+            soundToggle.addEventListener('click', toggleSound);
+            
+            // Theme buttons
+            themeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    themeButtons.forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Set category
+                    const category = this.dataset.category;
+                    setCategory(category);
+                    
+                    // Play theme change sound
+                    if (soundEnabled) playSound('theme');
+                });
+            });
+            
+            // Play a sound when the page loads
+            setTimeout(() => {
+                if (soundEnabled) playSound('convert');
+            }, 1000);
+        }
+        
+        // Set category
+        function setCategory(category) {
+            const categoryData = categories[category];
+            const units = categoryData.units;
+            
+            // Clear current options
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+            
+            // Add new options
+            units.forEach(unit => {
+                const option1 = document.createElement('option');
+                option1.value = unit;
+                option1.textContent = `${unitNames[unit]} (${unit})`;
+                
+                const option2 = option1.cloneNode(true);
+                
+                fromUnitSelect.appendChild(option1);
+                toUnitSelect.appendChild(option2);
+            });
+            
+            // Set default selections
+            fromUnitSelect.selectedIndex = 0;
+            toUnitSelect.selectedIndex = units.length > 1 ? 1 : 0;
+            
+            // Clear result
+            resultDiv.style.display = 'none';
+        }
+        
+        // Convert function
+        function convert() {
+            const value = parseFloat(valueInput.value);
+            
+            if (isNaN(value)) {
+                alert('Please enter a valid number');
+                return;
+            }
+            
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            
+            if (fromUnit === toUnit) {
+                showResult(`${value} ${unitNames[fromUnit]} = ${value} ${unitNames[toUnit]}`);
+                return;
+            }
+            
+            let result;
+            
+            // Handle temperature conversions
+            if (fromUnit === 'fahrenheit' && toUnit === 'celsius') {
+                result = conversionFactors.fahrenheit.celsius(value);
+            } else if (fromUnit === 'celsius' && toUnit === 'fahrenheit') {
+                result = conversionFactors.celsius.fahrenheit(value);
+            } 
+            // Handle other conversions
+            else if (conversionFactors[fromUnit] && conversionFactors[fromUnit][toUnit]) {
+                if (typeof conversionFactors[fromUnit][toUnit] === 'function') {
+                    result = conversionFactors[fromUnit][toUnit](value);
+                } else {
+                    result = value * conversionFactors[fromUnit][toUnit];
+                }
+            } else if (conversionFactors[toUnit] && conversionFactors[toUnit][fromUnit]) {
+                if (typeof conversionFactors[toUnit][fromUnit] === 'function') {
+                    result = conversionFactors[toUnit][fromUnit](value);
+                } else {
+                    result = value / conversionFactors[toUnit][fromUnit];
+                }
+            } else {
+                alert('Conversion not supported');
+                return;
+            }
+            
+            // Format result
+            const formattedResult = result % 1 === 0 ? result : result.toFixed(4);
+            showResult(`${value} ${unitNames[fromUnit]} = ${formattedResult} ${unitNames[toUnit]}`);
+            
+            // Play sound
+            if (soundEnabled) playSound('convert');
+        }
+        
+        // Show result
+        function showResult(text) {
+            resultValue.textContent = text;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Swap units function
+        function swapUnits() {
+            const tempUnit = fromUnitSelect.value;
+            fromUnitSelect.value = toUnitSelect.value;
+            toUnitSelect.value = tempUnit;
+            
+            // Play swap sound
+            if (soundEnabled) playSound('swap');
+            
+            convert();
+        }
+        
+        // Surprise me function
+        function surpriseMe() {
+            // Get a random conversion
+            const conversion = surpriseConversions[Math.floor(Math.random() * surpriseConversions.length)];
+            
+            // Set random value between 1 and 100
+            const value = Math.floor(Math.random() * 100) + 1;
+            valueInput.value = value;
+            
+            // Calculate result
+            const result = value * conversion.factor;
+            const formattedResult = result % 1 === 0 ? result : result.toFixed(2);
+            
+            // Show result
+            showResult(`${value} ${conversion.fromName} = ${formattedResult} ${conversion.toName}`);
+            resultValue.innerHTML = `${value} ${conversion.fromName} = ${formattedResult} ${conversion.toName}<br><small>${conversion.desc}</small>`;
+            
+            // Play sound
+            if (soundEnabled) playSound('surprise');
+        }
+        
+        // Toggle sound function
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            soundToggle.innerHTML = soundEnabled ? 
+                '<i class="fas fa-volume-up"></i>' : 
+                '<i class="fas fa-volume-mute"></i>';
+                
+            // Play a sound to indicate sound status
+            if (soundEnabled) playSound('theme');
+        }
+        
+        // Initialize the app when the page loads
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
